@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>بازی جاسوس 👀</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container" id="mainMenu">
+    <h1>🎮 بازی جاسوس</h1>
+    <button onclick="goToHost()" class="btn">🎩 ورود به عنوان داور</button>
+    <button onclick="goToJoin()" class="btn">🧑‍🤝‍🧑 ورود به عنوان بازیکن</button>
+  </div>
+
+  <div class="container hidden" id="hostMenu">
+    <h2>🎩 تنظیمات داور</h2>
+    <label for="playerCount">تعداد بازیکنان (۳ تا ۱۰):</label>
+    <input type="number" id="playerCount" min="3" max="10" value="4" />
+    <button onclick="createGameCode()" class="btn">🎲 تولید کد بازی</button>
+    <div id="hostCodeBox"></div>
+  </div>
+
+  <div class="container hidden" id="joinMenu">
+    <h2>🎮 ورود بازیکن</h2>
+    <label for="joinCode">کد ورود به بازی:</label>
+    <input type="text" id="joinCode" maxlength="6" />
+    <button onclick="joinGame()" class="btn">🚪 ورود به بازی</button>
+    <div id="joinStatus"></div>
+  </div>
+
+  <div class="container hidden" id="waitingRoom">
+    <h2>🕒 منتظر بازیکنان دیگر...</h2>
+    <p>کد بازی: <span id="waitingCode"></span></p>
+    <div id="playerList"></div>
+    <button id="startGameBtn" class="btn hidden" onclick="startGame()">🚀 شروع بازی</button>
+  </div>
+
+  <div class="container hidden" id="gameScreen">
+    <h2 id="gameStageTitle">مرحله وارد کردن کد</h2>
+    <div id="gameTable"></div>
+    <div id="roleBox" class="hidden"></div>
+    <div id="codeInputBox" class="hidden">
+      <input type="text" id="codeInput" placeholder="کد خود را وارد کنید" />
+      <button onclick="submitPlayerCode()" class="btn">ارسال</button>
+    </div>
+    <div id="votePanel" class="hidden">
+      <h3>🗳️ رأی‌گیری</h3>
+      <div id="voteButtons"></div>
+      <p id="voteTimer">2:00</p>
+    </div>
+    <div id="finalResult"></div>
+  </div>
+</body>
+</html>
