@@ -3,54 +3,100 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>بازی جاسوس 👀</title>
+  <title>🎭 بازی جاسوس</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="container" id="mainMenu">
-    <h1>🎮 بازی جاسوس</h1>
-    <button onclick="goToHost()" class="btn">🎩 ورود به عنوان داور</button>
-    <button onclick="goToJoin()" class="btn">🧑‍🤝‍🧑 ورود به عنوان بازیکن</button>
-  </div>
+  <div class="container">
+    <h1>🎭 بازی جاسوس</h1>
 
-  <div class="container hidden" id="hostMenu">
-    <h2>🎩 تنظیمات داور</h2>
-    <label for="playerCount">تعداد بازیکنان (۳ تا ۱۰):</label>
-    <input type="number" id="playerCount" min="3" max="10" value="4" />
-    <button onclick="createGameCode()" class="btn">🎲 تولید کد بازی</button>
-    <div id="hostCodeBox"></div>
-  </div>
-
-  <div class="container hidden" id="joinMenu">
-    <h2>🎮 ورود بازیکن</h2>
-    <label for="joinCode">کد ورود به بازی:</label>
-    <input type="text" id="joinCode" maxlength="6" />
-    <button onclick="joinGame()" class="btn">🚪 ورود به بازی</button>
-    <div id="joinStatus"></div>
-  </div>
-
-  <div class="container hidden" id="waitingRoom">
-    <h2>🕒 منتظر بازیکنان دیگر...</h2>
-    <p>کد بازی: <span id="waitingCode"></span></p>
-    <div id="playerList"></div>
-    <button id="startGameBtn" class="btn hidden" onclick="startGame()">🚀 شروع بازی</button>
-  </div>
-
-  <div class="container hidden" id="gameScreen">
-    <h2 id="gameStageTitle">مرحله وارد کردن کد</h2>
-    <div id="gameTable"></div>
-    <div id="roleBox" class="hidden"></div>
-    <div id="codeInputBox" class="hidden">
-      <input type="text" id="codeInput" placeholder="کد خود را وارد کنید" />
-      <button onclick="submitPlayerCode()" class="btn">ارسال</button>
+    <div id="mainMenu">
+      <button onclick="showHostPanel()">🎮 ورود به عنوان داور</button>
+      <button onclick="showJoinPanel()">👤 ورود به عنوان بازیکن</button>
     </div>
-    <div id="votePanel" class="hidden">
-      <h3>🗳️ رأی‌گیری</h3>
-      <div id="voteButtons"></div>
-      <p id="voteTimer">2:00</p>
+
+    <!-- پنل داور -->
+    <div id="hostPanel" style="display: none;">
+      <h2>👑 ایجاد بازی جدید</h2>
+      <label>تعداد بازیکنان:</label>
+      <select id="playerCount">
+        <option value="3">3 نفر</option>
+        <option value="4">4 نفر</option>
+        <option value="5">5 نفر</option>
+        <option value="6">6 نفر</option>
+        <option value="7">7 نفر</option>
+        <option value="8">8 نفر</option>
+        <option value="9">9 نفر</option>
+        <option value="10">10 نفر</option>
+      </select>
+      <button onclick="startHost()">🎲 ایجاد بازی</button>
+      <button onclick="goBack()">🔙 بازگشت</button>
     </div>
-    <div id="finalResult"></div>
+
+    <!-- پنل بازیکن -->
+    <div id="joinPanel" style="display: none;">
+      <h2>🎮 ورود به بازی</h2>
+      <label>کد بازی:</label>
+      <input id="joinCode" type="text" placeholder="مثال: FX7P3" maxlength="5" />
+      <label>نام بازیکن (انتخاب ایموجی حیوان):</label>
+      <select id="emojiSelect">
+        <option>🐶</option>
+        <option>🐱</option>
+        <option>🦊</option>
+        <option>🐼</option>
+        <option>🐵</option>
+        <option>🐷</option>
+        <option>🐯</option>
+        <option>🐸</option>
+        <option>🐻</option>
+        <option>🐨</option>
+      </select>
+      <button onclick="joinAsPlayer()">▶️ ورود به بازی</button>
+      <button onclick="goBack()">🔙 بازگشت</button>
+    </div>
   </div>
+
+  <script>
+    function showHostPanel() {
+      document.getElementById("mainMenu").style.display = "none";
+      document.getElementById("hostPanel").style.display = "block";
+    }
+
+    function showJoinPanel() {
+      document.getElementById("mainMenu").style.display = "none";
+      document.getElementById("joinPanel").style.display = "block";
+    }
+
+    function goBack() {
+      document.getElementById("mainMenu").style.display = "block";
+      document.getElementById("hostPanel").style.display = "none";
+      document.getElementById("joinPanel").style.display = "none";
+    }
+
+    function startHost() {
+      const count = parseInt(document.getElementById("playerCount").value);
+      const gameCode = generateCode();
+      window.location.href = `host.html?count=${count}&code=${gameCode}`;
+    }
+
+    function joinAsPlayer() {
+      const code = document.getElementById("joinCode").value.trim().toUpperCase();
+      const emoji = document.getElementById("emojiSelect").value;
+      if (code.length !== 5) {
+        alert("کد بازی باید ۵ کاراکتر باشد.");
+        return;
+      }
+      window.location.href = `join.html?code=${code}&emoji=${encodeURIComponent(emoji)}`;
+    }
+
+    function generateCode() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let result = "";
+      for (let i = 0; i < 5; i++) {
+        result += chars[Math.floor(Math.random() * chars.length)];
+      }
+      return result;
+    }
+  </script>
 </body>
 </html>
